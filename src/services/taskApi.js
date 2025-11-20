@@ -1,90 +1,71 @@
-// Mock API Service для управления задачами
-// Это заглушка бэкенда, которая эмулирует API
+// Real API Service connecting to Python Backend
 
-const STORAGE_KEY = 'tasks_data'
+const API_URL = '/api';
 
-// Имитация задержки сети
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
-// Инициализация хранилища
-const initStorage = () => {
-  if (!localStorage.getItem(STORAGE_KEY)) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([]))
+// Helper to handle response
+const handleResponse = async (response) => {
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: 'Something went wrong' }));
+    throw new Error(error.detail || 'API Error');
   }
+  return response.json();
+};
+
+// --- Auth ---
+
+export const register = async (userData) => {
+  const response = await fetch(`${API_URL}/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),
+  });
+  return handleResponse(response);
 }
 
-// Получить все задачи пользователя
+export const login = async (credentials) => {
+  const response = await fetch(`${API_URL}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials),
+  });
+  return handleResponse(response);
+}
+
+// --- Tasks ---
+
 export const getTasks = async (userId) => {
-  await delay(300) // Имитируем сетевую задержку
-  initStorage()
-
-  const allTasks = JSON.parse(localStorage.getItem(STORAGE_KEY))
-  return allTasks.filter(task => task.userId === userId)
+  const response = await fetch(`${API_URL}/tasks/${userId}`);
+  return handleResponse(response);
 }
 
-// Создать новую задачу
 export const createTask = async (userId, taskData) => {
-  await delay(200)
-  initStorage()
-
-  const tasks = JSON.parse(localStorage.getItem(STORAGE_KEY))
-
-  const newTask = {
-    id: Date.now().toString(),
-    userId,
-    ...taskData,
-    createdAt: new Date().toISOString(),
-    completed: false
-  }
-
-  tasks.push(newTask)
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
-
-  return newTask
+  const response = await fetch(`${API_URL}/tasks/${userId}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(taskData),
+  });
+  return handleResponse(response);
 }
 
-// Обновить задачу
 export const updateTask = async (userId, taskId, updates) => {
-  await delay(200)
-  initStorage()
-
-  const tasks = JSON.parse(localStorage.getItem(STORAGE_KEY))
-  const taskIndex = tasks.findIndex(t => t.id === taskId && t.userId === userId)
-
-  if (taskIndex === -1) {
-    throw new Error('Task not found')
-  }
-
-  tasks[taskIndex] = {
-    ...tasks[taskIndex],
-    ...updates,
-    updatedAt: new Date().toISOString()
-  }
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
-
-  return tasks[taskIndex]
+  const response = await fetch(`${API_URL}/tasks/${userId}/${taskId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+  return handleResponse(response);
 }
 
-// Удалить задачу
 export const deleteTask = async (userId, taskId) => {
-  await delay(200)
-  initStorage()
-
-  const tasks = JSON.parse(localStorage.getItem(STORAGE_KEY))
-  const filteredTasks = tasks.filter(t => !(t.id === taskId && t.userId === userId))
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredTasks))
-
-  return { success: true }
+  const response = await fetch(`${API_URL}/tasks/${userId}/${taskId}`, {
+    method: 'DELETE',
+  });
+  return handleResponse(response);
 }
 
-// Получить статистику задач
+// Client-side helpers (no backend change needed for these yet)
 export const getTaskStats = async (userId) => {
-  await delay(200)
-
-  const tasks = await getTasks(userId)
-
+  const tasks = await getTasks(userId);
   return {
     total: tasks.length,
     completed: tasks.filter(t => t.completed).length,
@@ -99,31 +80,23 @@ export const getTaskStats = async (userId) => {
   }
 }
 
-// Поиск задач
 export const searchTasks = async (userId, query) => {
-  await delay(200)
-
-  const tasks = await getTasks(userId)
-
+  const tasks = await getTasks(userId);
   return tasks.filter(task =>
     task.text.toLowerCase().includes(query.toLowerCase()) ||
     task.category.toLowerCase().includes(query.toLowerCase())
   )
 }
 
-// Сортировка задач
 export const sortTasks = async (userId, sortBy = 'date') => {
-  await delay(200)
-
-  const tasks = await getTasks(userId)
-
-  const priorityOrder = { high: 0, medium: 1, low: 2 }
+  const tasks = await getTasks(userId);
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
 
   switch (sortBy) {
     case 'priority':
       return tasks.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
     case 'date':
-      return tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      return tasks.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     case 'name':
       return tasks.sort((a, b) => a.text.localeCompare(b.text))
     default:
@@ -131,9 +104,7 @@ export const sortTasks = async (userId, sortBy = 'date') => {
   }
 }
 
-// Сбросить все задачи (для демонстрации)
 export const resetTasks = async () => {
-  await delay(300)
-  localStorage.removeItem(STORAGE_KEY)
-  return { success: true }
+  console.warn('Reset tasks not implemented in backend mode');
+  return { success: true };
 }
