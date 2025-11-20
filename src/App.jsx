@@ -24,7 +24,9 @@ function App() {
     }, []);
 
     const showToast = (message, type = 'info') => {
+        console.log('showToast called:', { message, type });
         setToast({ message, type });
+        console.log('toast state set');
     };
 
     const handleLogin = async (credentials) => {
@@ -36,10 +38,9 @@ function App() {
             localStorage.setItem('user', JSON.stringify(user));
             showToast(`Добро пожаловать, ${user.name || user.email}!`, 'success');
         } catch (error) {
-            const errorMessage = error.message.includes('email or password')
-                ? 'Неверный email или пароль'
-                : error.message;
-            showToast(errorMessage, 'error');
+            console.log('Login error:', error);
+            console.log('Error message:', error.message);
+            showToast(error.message || 'Произошла ошибка', 'error');
         }
     };
 
@@ -52,10 +53,7 @@ function App() {
             localStorage.setItem('user', JSON.stringify(user));
             showToast(`Регистрация успешна! Добро пожаловать, ${user.name}!`, 'success');
         } catch (error) {
-            const errorMessage = error.message.includes('already registered')
-                ? 'Пользователь с таким email уже зарегистрирован'
-                : error.message;
-            showToast(errorMessage, 'error');
+            showToast(error.message, 'error');
         }
     };
 
@@ -67,7 +65,18 @@ function App() {
     };
 
     if (!isAuthenticated) {
-        return <Auth onLogin={handleLogin} onRegister={handleRegister} />;
+        return (
+            <>
+                <Auth onLogin={handleLogin} onRegister={handleRegister} />
+                {toast && (
+                    <Toast
+                        message={toast.message}
+                        type={toast.type}
+                        onClose={() => setToast(null)}
+                    />
+                )}
+            </>
+        );
     }
 
     return (

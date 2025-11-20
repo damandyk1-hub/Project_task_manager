@@ -5,8 +5,17 @@ const API_URL = '/api';
 // Helper to handle response
 const handleResponse = async (response) => {
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ detail: 'Something went wrong' }));
-    throw new Error(error.detail || 'API Error');
+    try {
+      const error = await response.json();
+      console.error('API Error:', error);
+      throw new Error(error.detail || error.message || 'Произошла ошибка');
+    } catch (e) {
+      // Если не удалось распарсить JSON
+      if (e.message && !e.message.includes('JSON')) {
+        throw e; // Перебрасываем нашу ошибку
+      }
+      throw new Error(`Ошибка сервера (${response.status})`);
+    }
   }
   return response.json();
 };
