@@ -1,240 +1,145 @@
-# Task Manager - Веб-приложение для управления задачами
+# LMS Frontend Prototype Documentation
 
-## 📋 Описание проекта
+## 1. Overview
 
-Task Manager - это современное fullstack веб-приложение для управления задачами, разработанное с использованием React и FastAPI. Приложение демонстрирует применение современных фронтенд и бэкенд технологий, а также best practices веб-разработки.
+This document provides technical documentation for the Learning Management System (LMS) Frontend Prototype. This application is a Single Page Application (SPA) designed to serve as a landing and course catalog interface for an educational platform. It is built using the React ecosystem and leverages modern build tools for optimized performance and developer experience.
 
-## 👥 Авторы
+## 2. Technical Specifications
 
-- **Амандыкова Диана** 
-- **Бауржанкызы Аружан** 
+### 2.1 Core Stack
+*   **Runtime Environment**: Node.js (v18.0.0 or higher recommended)
+*   **Framework**: React v19.x
+*   **Build System**: Vite v7.x
+*   **Language**: JavaScript (ESNext)
+*   **Styling**: CSS3 (Custom Properties), Bootstrap v5.3 (Grid System & Utilities)
 
-## 🎯 Цель проекта
+### 2.2 Key Dependencies
+*   `react`: Core UI library.
+*   `react-dom`: DOM rendering entry point.
+*   `react-bootstrap`: React component wrappers for Bootstrap.
+*   `bootstrap-icons`: SVG icon library.
+*   `vite`: Next-generation frontend tooling.
 
-Создание полнофункционального веб-приложения для управления задачами с системой аутентификации, категоризацией задач по приоритетам и удобным пользовательским интерфейсом.
+## 3. Getting Started
 
-## 🛠 Технологический стек
+### 3.1 Prerequisites
+Ensure the following are installed on the development machine:
+*   **Node.js**: [Download](https://nodejs.org/) (LTS version recommended).
+*   **NPM**: Included with Node.js.
 
-### Frontend
-- **React 18** - JavaScript библиотека для создания пользовательских интерфейсов
-- **React Hooks** - useState, useEffect, useMemo, useRef для управления состоянием
-- **Bootstrap 5** - CSS-фреймворк для адаптивного дизайна
-- **Vite** - быстрый сборщик модулей и сервер разработки
+### 3.2 Installation
+1.  Navigate to the project root directory.
+2.  Install project dependencies:
+    ```bash
+    npm install
+    ```
 
-### Backend
-- **FastAPI** - современный Python фреймворк для создания API
-- **SQLAlchemy** - ORM для работы с базой данных
-- **SQLite** - легковесная реляционная база данных
-- **Pydantic** - валидация данных
-- **Passlib + Bcrypt** - хеширование паролей
-
-## 🏗 Архитектура приложения
-
-### Структура проекта
-
-```
-Project_task_manager/
-├── backend/                # Backend приложение (FastAPI)
-│   ├── main.py            # Основной файл с API endpoints
-│   ├── models.py          # SQLAlchemy модели
-│   ├── schemas.py         # Pydantic схемы валидации
-│   ├── database.py        # Настройка подключения к БД
-│   ├── requirements.txt   # Python зависимости
-│   └── tasks.db          # SQLite база данных
-├── src/                   # Frontend приложение (React)
-│   ├── components/        # React компоненты
-│   │   ├── About.jsx     # Страница "О нас"
-│   │   ├── Auth.jsx      # Компонент аутентификации
-│   │   ├── TaskItem.jsx  # Элемент задачи
-│   │   ├── TaskManager.jsx # Главный компонент управления задачами
-│   │   └── Toast.jsx     # Компонент уведомлений
-│   ├── services/         # API сервисы
-│   │   └── taskApi.js   # HTTP клиент для работы с API
-│   ├── App.jsx          # Корневой компонент
-│   ├── main.jsx         # Точка входа приложения
-│   └── style.css        # Глобальные стили
-├── index.html           # HTML-шаблон
-├── package.json         # Frontend зависимости
-├── vite.config.js       # Конфигурация Vite
-└── README.md           # Документация
-```
-
-### Компонентная архитектура Frontend
-
-#### 1. **App.jsx** - Корневой компонент
-- Управление аутентификацией пользователя
-- Навигация между страницами
-- Отображение навигационной панели
-- Управление Toast уведомлениями
-
-#### 2. **Auth.jsx** - Аутентификация
-- Формы логина и регистрации
-- Валидация данных
-- Передача событий родительскому компоненту
-
-#### 3. **TaskManager.jsx** - Управление задачами
-- Добавление новых задач
-- Фильтрация (все/активные/завершенные)
-- Поиск по задачам
-- Отображение статистики
-- Интеграция с REST API
-
-#### 4. **TaskItem.jsx** - Элемент задачи
-- Отображение информации о задаче
-- Редактирование задачи (двойной клик)
-- Переключение статуса (завершена/активна)
-- Удаление задачи
-- Отображение приоритета, категории и дедлайна
-
-#### 5. **Toast.jsx** - Уведомления
-- Красивые всплывающие уведомления
-- Разные типы: success, error, warning, info
-- Автоматическое скрытие
-
-#### 6. **About.jsx** - О проекте
-- Информация о приложении
-- Данные об авторах
-- Технологический стек
-
-### Backend API Endpoints
-
-#### Аутентификация
-- `POST /api/register` - Регистрация нового пользователя
-- `POST /api/login` - Вход в систему
-
-#### Управление задачами
-- `GET /api/tasks/{user_id}` - Получить все задачи пользователя
-- `POST /api/tasks/{user_id}` - Создать новую задачу
-- `PUT /api/tasks/{user_id}/{task_id}` - Обновить задачу
-- `DELETE /api/tasks/{user_id}/{task_id}` - Удалить задачу
-
-## 💡 Ключевые особенности
-
-### 1. Система аутентификации
-- Регистрация новых пользователей
-- Вход в систему
-- Хеширование паролей (bcrypt)
-- Сохранение сессии в LocalStorage
-
-### 2. Управление задачами
-- **Создание** задач с указанием:
-  - Названия
-  - Категории (работа, личное, покупки, учеба, здоровье, другое)
-  - Приоритета (высокий, средний, низкий)
-  - Дедлайна (опционально)
-- **Редактирование** задач (двойной клик на текст)
-- **Удаление** задач
-- **Отметка** задач как завершенных
-
-### 3. Фильтрация и поиск
-- Фильтр по статусу (все/активные/завершенные)
-- Полнотекстовый поиск по названию и категории
-- Автоматическая сортировка по приоритету
-
-### 4. Визуализация данных
-- Статистика в реальном времени
-- Цветовое кодирование приоритетов
-- Адаптивный дизайн для всех устройств
-
-### 5. Уведомления
-- Красивые Toast уведомления
-- Информативные сообщения об ошибках
-- Подтверждения успешных операций
-
-## 🚀 Установка и запуск
-
-### Требования
-- Node.js версии 14 или выше
-- Python 3.8 или выше
-- npm или yarn
-
-### Установка Backend
-
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-### Запуск Backend сервера
-
-```bash
-cd backend
-uvicorn main:app --reload
-```
-
-Backend будет доступен по адресу: `http://127.0.0.1:8000`
-API документация (Swagger): `http://127.0.0.1:8000/docs`
-
-### Установка Frontend
-
-```bash
-npm install
-```
-
-### Запуск Frontend сервера разработки
-
+### 3.3 Development Server
+To start the local development server with Hot Module Replacement (HMR):
 ```bash
 npm run dev
 ```
+The application will be accessible at `http://localhost:5173` by default.
 
-Приложение будет доступно по адресу: `http://localhost:5173`
+## 4. System Architecture
 
+### 4.1 Design Pattern
+The application follows a **Component-Based Architecture**. The UI is decomposed into independent, reusable pieces (components), each responsible for a specific part of the interface. Data flows unidirectionally (top-down) via props, while state is managed locally within components or lifted to common ancestors when necessary.
 
-## 📝 Используемые паттерны и практики
+### 4.2 Directory Structure
+The project adheres to a standard Vite + React scaffolding structure:
 
-### Frontend
-1. **Component-based Architecture** - разделение на переиспользуемые компоненты
-2. **React Hooks** - функциональные компоненты с хуками
-3. **Reactive Data** - реактивность с useState и useMemo
-4. **Props & Callbacks** - коммуникация между компонентами
-5. **Async/Await** - для асинхронных операций
-6. **Error Handling** - централизованная обработка ошибок
+```
+prototype/
+├── public/                  # Static assets served directly (favicon, robots.txt)
+├── src/
+│   ├── assets/              # Source assets (images, fonts) processed by build
+│   ├── components/          # React Components (Presentation & Logic)
+│   │   ├── Contact.jsx      # Contact form module
+│   │   ├── Courses.jsx      # Course catalog module
+│   │   ├── Features.jsx     # Features/Benefits module
+│   │   ├── Footer.jsx       # Site footer module
+│   │   ├── Hero.jsx         # Hero/Landing module
+│   │   └── Navbar.jsx       # Navigation module
+│   ├── App.css              # Global styles, variables, and animations
+│   ├── App.jsx              # Root Component (Layout composition)
+│   └── main.jsx             # Application Entry Point (DOM Mounting)
+├── index.html               # HTML Entry Point
+├── package.json             # Project manifest and scripts
+└── vite.config.js           # Vite configuration
+```
 
-### Backend
-1. **RESTful API** - стандартизированный API дизайн
-2. **ORM Pattern** - SQLAlchemy для работы с БД
-3. **Dependency Injection** - FastAPI dependencies
-4. **Schema Validation** - Pydantic модели
-5. **Layered Architecture** - разделение на models, schemas, endpoints
+## 5. Component Reference
 
-## 📚 Зависимости проекта
+### 5.1 Navbar (`src/components/Navbar.jsx`)
+**Responsibility**: Handles global navigation and mobile menu toggling.
+*   **State**: `expanded` (Boolean) - Tracks the open/closed state of the mobile hamburger menu.
+*   **Behavior**:
+    *   Attaches a scroll listener (via CSS classes) to apply backdrop blur effects.
+    *   Automatically collapses the mobile menu upon selecting a navigation item.
 
-### Frontend (package.json)
-```json
-{
-  "dependencies": {
-    "bootstrap": "^5.3.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.0.3",
-    "vite": "^4.4.9"
-  }
+### 5.2 Hero (`src/components/Hero.jsx`)
+**Responsibility**: Displays the primary value proposition and call-to-action (CTA).
+*   **Features**:
+    *   Implements CSS-only animations for floating elements (`@keyframes float`).
+    *   Uses absolute positioning for decorative background elements.
+
+### 5.3 Courses (`src/components/Courses.jsx`)
+**Responsibility**: Renders the list of available courses.
+*   **Data Source**: Internal constant `coursesData` (Array of Objects).
+*   **Rendering Logic**: Maps over the data array to generate `Card` components.
+*   **Layout**: Utilizes Bootstrap's Grid system (`Row`, `Col`) for responsive arrangement (1 column on mobile, 2 on tablet, 3 on desktop).
+
+### 5.4 Contact (`src/components/Contact.jsx`)
+**Responsibility**: User inquiry collection.
+*   **State**: `formData` (Object) - Stores values for `name`, `email`, `subject`, `message`.
+*   **Validation**: HTML5 constraint validation (`required`, `type="email"`).
+*   **Submission Logic**:
+    *   Intercepts default form submission (`e.preventDefault()`).
+    *   Simulates an asynchronous API call using `setTimeout`.
+    *   Provides visual feedback upon success.
+
+## 6. Styling & Theming
+
+### 6.1 CSS Variables
+The application uses CSS Custom Properties for theming, defined in `:root` within `App.css`. This allows for centralized management of colors and spacing.
+
+```css
+:root {
+  --primary-color: #6366f1;
+  --secondary-color: #0ea5e9;
+  --dark-color: #0f172a;
+  --glass-bg: rgba(255, 255, 255, 0.1);
 }
 ```
 
-### Backend (requirements.txt)
+### 6.2 Responsive Design Strategy
+*   **Mobile-First**: Base styles are optimized for mobile.
+*   **Breakpoints**:
+    *   `< 768px`: Mobile layout (Stacked elements, hidden navigation).
+    *   `768px - 991px`: Tablet layout (Condensed grids).
+    *   `> 992px`: Desktop layout (Full navigation, expanded grids).
+
+## 7. Build & Deployment
+
+### 7.1 Production Build
+To generate a production-ready build:
+```bash
+npm run build
 ```
-fastapi
-uvicorn[standard]
-sqlalchemy
-pydantic
-passlib[bcrypt]
-python-multipart
+This command invokes `vite build`, which:
+1.  Transpiles React/JSX to standard JavaScript.
+2.  Bundles and minifies assets.
+3.  Outputs optimized files to the `dist/` directory.
+
+### 7.2 Preview
+To preview the production build locally:
+```bash
+npm run preview
 ```
 
-
-
-## 📞 Контакты
-
-Авторы проекта:
-- Амандыкова Диана
-- Бауржанкызы Аружан
+### 7.3 Deployment
+The contents of the `dist/` directory are static files that can be deployed to any static hosting provider (e.g., Nginx, Apache, Vercel, Netlify, AWS S3). Ensure the server is configured to serve `index.html` for SPA routing if client-side routing is added in the future.
 
 ---
-
-**Дата создания**: Октябрь 2025
-**Последнее обновление**: Ноябрь 2025
-**Версия**: 2.0.0 (React + FastAPI)
-**Лицензия**: MIT
+*Documentation generated for version 1.0.0*
